@@ -42,21 +42,6 @@ public class Main {
         }
     }
 }
-
-
-//
-//            Statement statement = conn.createStatement();
-//            ResultSet resultSet = statement.executeQuery("select * from user_accounts");
-//
-//            while (resultSet.next()) {
-//                System.out.println(resultSet.getString("username"));
-//                System.out.println(resultSet.getString("password"));
-//
-//            }
-//        } catch (Exception e){
-//           System.out.println(e);
-//        }
-//
 //        System.out.println("Welcome to Bankify! \"Banking made easy!\"");
 //        System.out.println("Please select one of the following options: 1 or 2\n" +
 //                "1. Login \n2. Create Account \nEnter Choice: ");
