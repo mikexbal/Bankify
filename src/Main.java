@@ -1,24 +1,75 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.*;
+import java.util.Properties;
 
 public class Main {
-    public static void main(String[] args) {
+    //Main class will serve as the view
+    //This class will control function calls and user inputs
+
+    public static void main(String[] args) throws SQLException {
+        //Create prop to access our config file
+        Properties prop = new Properties();
+        String propFileName = "resources/config.properties";
+        String databaseURL;
+        String databasePassword;
+        String databaseUsername;
+        String accountUsername;
+        String accountPassword;
+
+
         try {
-            //Connection String
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BankifyDB", "root", "");
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("select * from user_accounts");
+            //InputStream to read the contents of our config files
+            FileInputStream inputStream = new FileInputStream(propFileName);
+            prop.load(inputStream);
 
-            while (resultSet.next()) {
-                System.out.println(resultSet.getString("username"));
-                System.out.println(resultSet.getString("password"));
+            //Grab config values and pass them into variables
+            databaseURL = prop.getProperty("database.url");
+            databasePassword = prop.getProperty("database.password");
+            databaseUsername = prop.getProperty("database.user");
 
-            }
-        } catch (Exception e){
-           System.out.println(e);
+            //Establish connection with database
+            DatabaseManager database = new DatabaseManager(DriverManager.getConnection(databaseURL, databaseUsername, databasePassword));
+
+            System.out.println("Connected to the MySQL database successfully!");
+
+            database.printTest();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
 }
+
+
+//
+//            Statement statement = conn.createStatement();
+//            ResultSet resultSet = statement.executeQuery("select * from user_accounts");
+//
+//            while (resultSet.next()) {
+//                System.out.println(resultSet.getString("username"));
+//                System.out.println(resultSet.getString("password"));
+//
+//            }
+//        } catch (Exception e){
+//           System.out.println(e);
+//        }
+//
+//        System.out.println("Welcome to Bankify! \"Banking made easy!\"");
+//        System.out.println("Please select one of the following options: 1 or 2\n" +
+//                "1. Login \n2. Create Account \nEnter Choice: ");
+//        Scanner scanner = new Scanner(System.in);
+//        int choice = scanner.nextInt();
+//
+//        switch (choice) {
+//            case 1: //Login to account
+//                System.out.println("Please enter your username: ");
+//
+//                break;
+//
+//            case 2: //Create Account
+//                System.out.println("Please enter your password: ");
+//        }
+
