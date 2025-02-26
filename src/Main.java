@@ -36,7 +36,9 @@ public class Main {
 
             database.printTest();
 
+            System.out.println("Testing Password validation");
 
+            System.out.println(database.validatePassword("MikexBal", "test12"));
 
 
         } catch (Exception e) {

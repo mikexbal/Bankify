@@ -40,6 +40,22 @@ public class DatabaseManager {
         preparedStatement.executeUpdate();
     }
 
+    public boolean validatePassword(String username, String password) throws SQLException {
+        String query = "SELECT password FROM user_accounts WHERE username = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1, username);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        while (resultSet.next()) {
+            if (resultSet.getString("password").equals(password)) {
+                return true;
+            }
+        }
+
+        System.out.println("Passwords do no match!");
+        return false;
+    }
+
 
     public void validateUser(String username, String password) throws SQLException {
         //Validate the username and then validate the password
@@ -55,11 +71,6 @@ public class DatabaseManager {
     public void withdrawFunds(String username, double amount) throws SQLException {
         //
     }
-
-    public void transferFunds(String fromUsername, String toUsername, double amount) throws SQLException {
-        //
-    }
-
 
 
 
