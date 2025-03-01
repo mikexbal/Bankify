@@ -41,15 +41,15 @@ public class DatabaseManager {
     }
 
     public boolean validatePassword(String username, String password) throws SQLException {
+        //Return true if password matches what's in database
         String query = "SELECT password FROM user_accounts WHERE username = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setString(1, username);
         ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
 
-        while (resultSet.next()) {
-            if (resultSet.getString("password").equals(password)) {
-                return true;
-            }
+        if (resultSet.getString("password").equals(password)) {
+            return true;
         }
 
         System.out.println("Passwords do no match!");
@@ -57,22 +57,42 @@ public class DatabaseManager {
     }
 
 
-    public void validateUser(String username, String password) throws SQLException {
-        //Validate the username and then validate the password
-        //if username not found prompt user to create account
-        //if username is found validate the password to log them into account
+    public boolean validateUsername(String username) throws SQLException {
+        //Return true if username is available
+        String query = "Select username FROM user_accounts WHERE username = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1, username);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        if (!resultSet.next()){
+            System.out.println("Username does not exist!");
+            return true;
+        } else {
+            System.out.println("Username exists already!");
+            return false;
+        }
     }
 
-    public void createAccount(String username, String password) throws SQLException {
 
+    public boolean createAccount(String username, String password, String verifyPassword) throws SQLException {
+        if (!validateUsername(username)) {
+            System.out.println("Username exists already!");
+            return false;
+        }
+
+        if (password.equals(verifyPassword)) {
+            String query = "INSERT INTO user_accounts (username, password, account_balance) VALUES (?, ?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            preparedStatement.setDouble(3, 0);
+            preparedStatement.executeUpdate();
+            System.out.println("Account successfully created!");
+            return true;
+        }
+        System.out.println("Passwords do no match!");
+        return false;
     }
-
-
-    public void withdrawFunds(String username, double amount) throws SQLException {
-        //
-    }
-
-
 
 
 }

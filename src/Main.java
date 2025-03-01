@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
+import java.util.Scanner;
 
 public class Main {
     //Main class will serve as the view
@@ -31,14 +32,53 @@ public class Main {
 
             //Establish connection with database
             DatabaseManager database = new DatabaseManager(DriverManager.getConnection(databaseURL, databaseUsername, databasePassword));
+            boolean menu = true;
 
-            System.out.println("Connected to the MySQL database successfully!");
+            Scanner scanner = new Scanner(System.in);
 
-            database.printTest();
+            //Using while loop to keep looping until a valid option is selected
+            while (menu) {
+                try {
+                    System.out.println("\nWelcome to Bankify, banking made simple!");
+                    System.out.println("Please select an option from the list below:\n" +
+                            "1. Login\n" +
+                            "2. Create Account\n" +
+                            "3. Exit");
+                    System.out.println("Enter option: ");
 
-            System.out.println("Testing Password validation");
 
-            System.out.println(database.validatePassword("MikexBal", "test12"));
+                    int option = scanner.nextInt(); // Get user input
+
+                    switch (option) {
+
+                        //Log in, allow user to input details and validate
+                        case 1:
+                            menu = false;
+                            System.out.println("Login");
+
+                            break;
+
+                        //Allow user to create an account
+                        case 2:
+                            menu = false;
+                            System.out.println("Create Account");
+                            break;
+
+                        //User opted to exit program, thank user for using!
+                        case 3:
+                            menu = false;
+                            System.out.println("Thanks for using Bankify!\nHave a great day!");
+                            System.exit(0);
+
+                        default:
+                            System.out.println("Invalid option! Please enter 1, 2, or 3.");
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Invalid input! Please enter a number.");
+                    scanner.nextLine();
+                }
+            }
 
 
         } catch (Exception e) {
@@ -46,19 +86,5 @@ public class Main {
         }
     }
 }
-//        System.out.println("Welcome to Bankify! \"Banking made easy!\"");
-//        System.out.println("Please select one of the following options: 1 or 2\n" +
-//                "1. Login \n2. Create Account \nEnter Choice: ");
-//        Scanner scanner = new Scanner(System.in);
-//        int choice = scanner.nextInt();
-//
-//        switch (choice) {
-//            case 1: //Login to account
-//                System.out.println("Please enter your username: ");
-//
-//                break;
-//
-//            case 2: //Create Account
-//                System.out.println("Please enter your password: ");
-//        }
+
 
