@@ -18,6 +18,7 @@ public class Main {
         String databaseUsername;
         String accountUsername;
         String accountPassword;
+        String verifyPassword;
 
 
         try {
@@ -44,6 +45,7 @@ public class Main {
                             "1. Login\n" +
                             "2. Create Account\n" +
                             "3. Exit");
+
                     System.out.println("Enter option: ");
 
 
@@ -54,14 +56,98 @@ public class Main {
                         //Log in, allow user to input details and validate
                         case 1:
                             menu = false;
-                            System.out.println("Login");
+                            boolean logging_in = true;
+                            while (logging_in){
+                                try {
+                                    System.out.println("Please enter your account username: ");
+                                    accountUsername = scanner.next();
+
+
+                                    if (database.validateUsername(accountUsername)) {
+                                        //If username is in database, validate password
+
+                                        System.out.println("Please enter your account password: ");
+                                        accountPassword = scanner.next();
+
+                                        if (database.validatePassword(accountUsername, accountPassword)) {
+                                            logging_in = false;
+
+                                            System.out.println("\nYou are now successfully logged in!");
+
+
+                                            System.out.println("Please select an option from the list below:\n" +
+                                                    "1. Deposit Funds\n" +
+                                                    "2. Withdraw Funds\n" +
+                                                    "3. Check Balance");
+
+                                            option = scanner.nextInt();
+
+
+
+                                            switch (option){
+                                                //Deposit Funcs
+                                                //Withdraw Funds
+                                                //Check Balance
+                                                case 1:
+                                                    System.out.println("Enter deposit amount: ");
+
+
+                                                    break;
+                                                case 2:
+                                                    System.out.println("Enter withdrawal amount: ");
+                                                    double amount = scanner.nextDouble();
+                                                    if (amount < database.checkBalance(accountUsername)) {
+                                                        System.out.println("You do not have enough money!");
+                                                    } else{
+                                                        database.withdrawFunds(amount, accountUsername);
+                                                        System.out.println("You have successfully withdrew $" + amount);
+                                                    }
+
+
+
+                                                    break;
+
+                                                case 3:
+                                                    System.out.println("Your current balance is: " + database.checkBalance(accountUsername));
+                                                    break;
+                                            }
+
+
+                                        } else {
+                                            System.out.println("Password is incorrect!");
+                                        }
+                                    } else {
+                                        System.out.println("Account does not exist!");
+                                    }
+                                } catch (Exception e) {
+                                    System.out.println("Invalid input!");
+                                    scanner.nextLine();
+
+
+                                }
+
+
+
+
+
+
+                            }
 
                             break;
 
                         //Allow user to create an account
                         case 2:
                             menu = false;
-                            System.out.println("Create Account");
+                            System.out.println("Please enter username: ");
+                            accountUsername = scanner.next();
+
+                            System.out.println("Please enter password: ");
+                            accountPassword = scanner.next();
+
+                            System.out.println("Please enter the password again: ");
+                            verifyPassword = scanner.next();
+
+                            database.createAccount(accountUsername, accountPassword, verifyPassword);
                             break;
 
                         //User opted to exit program, thank user for using!

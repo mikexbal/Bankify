@@ -13,15 +13,13 @@ public class DatabaseManager {
         this.connection = connection;
     }
 
-    public void printTest() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM user_accounts");
-        while (resultSet.next()) {
-            System.out.println(resultSet.getString("username"));
-            System.out.println(resultSet.getString("password"));
-            System.out.println(resultSet.getString("account_balance"));
-        }
-
+    public double checkBalance(String username) throws SQLException {
+        String query = "SELECT account_balance FROM user_accounts WHERE username = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1, username);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        return resultSet.getDouble("account_balance");
     }
 
     public void depositFunds(double amount, String username) throws SQLException {
@@ -36,8 +34,9 @@ public class DatabaseManager {
         String query = "UPDATE user_accounts SET account_balance = account_balance - ? WHERE username = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setDouble(1, amount);
-        preparedStatement.setString(2, username);
-        preparedStatement.executeUpdate();
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+
     }
 
     public boolean validatePassword(String username, String password) throws SQLException {
@@ -51,8 +50,6 @@ public class DatabaseManager {
         if (resultSet.getString("password").equals(password)) {
             return true;
         }
-
-        System.out.println("Passwords do no match!");
         return false;
     }
 
@@ -65,17 +62,17 @@ public class DatabaseManager {
         ResultSet resultSet = preparedStatement.executeQuery();
 
         if (!resultSet.next()){
-            System.out.println("Username does not exist!");
-            return true;
-        } else {
-            System.out.println("Username exists already!");
+
             return false;
+        } else {
+
+            return true;
         }
     }
 
 
     public boolean createAccount(String username, String password, String verifyPassword) throws SQLException {
-        if (!validateUsername(username)) {
+        if (validateUsername(username)) {
             System.out.println("Username exists already!");
             return false;
         }
