@@ -19,6 +19,7 @@ public class Main {
         String accountUsername;
         String accountPassword;
         String verifyPassword;
+        double amount;
 
 
         try {
@@ -90,21 +91,21 @@ public class Main {
                                                 //Check Balance
                                                 case 1:
                                                     System.out.println("Enter deposit amount: ");
+                                                    amount = scanner.nextDouble();
+                                                    database.depositFunds(amount, accountUsername);
+                                                    System.out.println("Deposit Successful! You have successfully deposited: $" + amount);
 
 
                                                     break;
                                                 case 2:
                                                     System.out.println("Enter withdrawal amount: ");
-                                                    double amount = scanner.nextDouble();
+                                                    amount = scanner.nextDouble();
                                                     if (amount < database.checkBalance(accountUsername)) {
                                                         System.out.println("You do not have enough money!");
                                                     } else{
                                                         database.withdrawFunds(amount, accountUsername);
                                                         System.out.println("You have successfully withdrew $" + amount);
                                                     }
-
-
-
                                                     break;
 
                                                 case 3:
@@ -122,17 +123,9 @@ public class Main {
                                 } catch (Exception e) {
                                     System.out.println("Invalid input!");
                                     scanner.nextLine();
-
-
                                 }
 
-
-
-
-
-
                             }
-
                             break;
 
                         //Allow user to create an account
